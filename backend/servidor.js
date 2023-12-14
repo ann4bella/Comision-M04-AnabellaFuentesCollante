@@ -28,12 +28,20 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(fileUpload());
 
+// Middleware de manejo de errores
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send('Algo salió mal en el servidor!');
+});
+
+
 // Rutas
 // Configuramos las rutas para diferentes funcionalidades.
 app.use(usuarioRouter);
 app.use(autenticacionRouter);
 app.use(posteoRouter);
 app.use(comentarioRouter);
+
 
 // Iniciamos el servidor en el puerto especificado y conectamos con la base de datos.
 app.listen(PORT, () => {

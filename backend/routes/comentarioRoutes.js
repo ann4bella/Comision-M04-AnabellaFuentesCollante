@@ -16,10 +16,10 @@ comentarioRouter.get('/comentarios/:idPosteo', listarComentariosDePosteo);
 comentarioRouter.post('/comentarios', crearComentario);
 
 // definimos la ruta para eliminar un comentario existente
-comentarioRouter.delete('/comentarios', eliminarComentario);
+comentarioRouter.delete('/comentarios/:id', eliminarComentario);
 
 // definimos la ruta para editar un comentario existente
-comentarioRouter.put('/comentarios', editarComentario);
+comentarioRouter.put('/comentarios/:id', editarComentario);
 
 // exportamos el enrutador para su uso en otras partes de la aplicación
 module.exports = comentarioRouter;

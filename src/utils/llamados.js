@@ -33,8 +33,26 @@ const traerComentariosDePosteoPorID = async (idPosteo) => {
         return false;
     }
 }
+// Función para obtener datos de un comentario por ID
+    const traerComentarioPorID = async (comentarioId) => {
+    const endpoint = url + 'comentarios/' + comentarioId;
+
+    try {
+        const respuesta = await axios.get(endpoint);
+
+        if (respuesta.status === 200) {
+            return respuesta.data;
+        } else {
+            return null;
+        }
+    } catch (error) {
+        return null;
+    }
+};
+
 
 export {
     traerDatosDePosteoPorID,
     traerComentariosDePosteoPorID,
+    traerComentarioPorID,
 }

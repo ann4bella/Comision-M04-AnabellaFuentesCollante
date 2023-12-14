@@ -59,9 +59,9 @@ ComentariosController.crearComentario = async (req, res) => {
 //ELIMINAR 1 COMENTARIO
 ComentariosController.eliminarComentario = async (req, res) => {
     try {
-        const { id } = req.body;
+        const { id } = req.params;
 
-        await ComentarioModel.findByIdAndDelete(id);
+        await ComentarioModel.findOneAndDelete({ _id: id });
 
         return res.json({ mensaje: 'Comentario eliminado con éxito' });
     } catch (error) {

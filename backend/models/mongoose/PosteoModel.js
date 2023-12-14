@@ -3,16 +3,16 @@ const { Schema, model } = require('mongoose');
 
 // creamos un nuevo esquema para los posteos.
 const PosteoSchema = new Schema({
-    // definimos un campo para el título de la publicación como tipo String.
     titulo: String,
-
-    // definimos un campo para la descripción de la publicación como tipo String.
     descripcion: String,
-
-    // definimos un campo para el autor de la publicación, utilizando un tipo ObjectId referenciando al modelo 'usuario'.
+    imagenURL: String,
     autor: {
         type: Schema.Types.ObjectId,
         ref: 'usuario',
+    },
+    fechaCreacion: {
+        type: Date,
+        default: Date.now,
     },
 });
 

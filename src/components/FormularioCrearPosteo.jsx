@@ -13,7 +13,7 @@ import { useAuthContext } from '../context/AuthContext';
 const FormularioCrearPosteo = () => {
     const [titulo, setTitulo] = useState('');
     const [descripcion, setDescripcion] = useState('');
-
+    const [imagenURL, setImagenURL] = useState('');
     const [deshabilitarBoton, setDeshabilitarBoton] = useState(false);
     const [errores, setErrores] = useState({});
 
@@ -28,6 +28,10 @@ const FormularioCrearPosteo = () => {
         setDescripcion(e.target.value);
     }
 
+    const cambiarImagenURL = (e) => {
+        setImagenURL(e.target.value);
+    }
+
     const verificarDatos = async () => {
         let misErrores = {}
 
@@ -37,6 +41,9 @@ const FormularioCrearPosteo = () => {
 
         if (descripcion.length === 0) {
             misErrores.descripcion = 'Debe introducir una descripción.';
+        }
+        if (!imagenURL) {
+            misErrores.imagenURL = 'Debe proporcionar una URL de imagen.';
         }
 
         setErrores(misErrores);
@@ -54,6 +61,7 @@ const FormularioCrearPosteo = () => {
         const datos = {
             titulo: titulo,
             descripcion: descripcion,
+            imagenURL: imagenURL,
         }
 
         const headers = {
@@ -117,9 +125,31 @@ const FormularioCrearPosteo = () => {
                 )
             }
 
-            <Button variant="primary" onClick={verificarDatos} disabled={deshabilitarBoton}>
-                Crear publicación
-            </Button>
+<Form.Group as={Row} className="mb-3">
+        <Form.Label column sm="2">
+          URL de la Imagen
+        </Form.Label>
+        <Col sm="10">
+          <Form.Control type="text" onInput={cambiarImagenURL} />
+          {errores.imagenURL && <span style={{ color: 'red' }}>{errores.imagenURL}</span>}
+        </Col>
+      </Form.Group>
+
+      {imagenURL && (
+        <Form.Group as={Row} className="mb-3">
+          <Col sm={{ span: 10, offset: 2 }}>
+            <img src={imagenURL} alt="Vista previa" style={{ maxWidth: '50%' }} />
+          </Col>
+        </Form.Group>
+      )}
+
+            {errores.error && (
+                <Alert variant="warning">{errores.error}</Alert>
+            )}
+
+                <Button variant="primary" onClick={verificarDatos} disabled={deshabilitarBoton}>
+                    Crear publicación
+                </Button>
         </Form>
     );
 }

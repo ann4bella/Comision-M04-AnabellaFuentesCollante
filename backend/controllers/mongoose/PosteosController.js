@@ -44,7 +44,7 @@ PosteosController.verPosteo = async (req, res) => {
 // Crear publicación
 PosteosController.crearPosteo = async (req, res) => {
     try {
-        const { titulo, descripcion } = req.body;
+        const { titulo, descripcion, imagenURL } = req.body;
 
         const { token } = req.headers;
 
@@ -63,7 +63,10 @@ PosteosController.crearPosteo = async (req, res) => {
             titulo: titulo,
             descripcion: descripcion,
             autor: autor,
+            fechaCreacion: new Date(), // agreamos la fecha de creacion del posteo
+            imagenURL: imagenURL, // agregamos la URL de la imagen
         });
+        console.log('URL de la imagen:', imagenURL);
 
         await nuevoPosteo.save();
 
@@ -81,7 +84,7 @@ PosteosController.crearPosteo = async (req, res) => {
 PosteosController.editarPosteo = async (req, res) => {
     try {
         // extraemos los datos necesarios de la solicitud HTTP
-        const { id, titulo, descripcion } = req.body;
+        const { id, titulo, descripcion, imagenURL } = req.body;
         const { token } = req.headers;
 
         // validamos el token
@@ -110,7 +113,7 @@ PosteosController.editarPosteo = async (req, res) => {
         // actualizamos el posteo utilizando el método findByIdAndUpdate
         await PosteoModel.findByIdAndUpdate(
             id,
-            { titulo: titulo, descripcion: descripcion }
+            { titulo: titulo, descripcion: descripcion, imagenURL: imagenURL, }
         );
 
         // respondemos con un mensaje de éxito

@@ -13,54 +13,50 @@ import { traerDatosDePosteoPorID } from './../utils/llamados.js';
 // Importamos una función utilitaria para traer datos específicos de una publicación por su ID.
 
 const FormularioEditar = (props) => {
-    // Declaramos las variables de estado necesarias para manejar el formulario.
     const { id, usuario, token } = props;
-    // Extraemos las propiedades `id`, `usuario`, y `token` del objeto `props`.
 
     const url = 'http://localhost:3000/publicacion';
-    // Definimos la URL del servidor donde se enviarán las solicitudes relacionadas con las publicaciones.
 
     const [titulo, setTitulo] = useState('');
     const [descripcion, setDescripcion] = useState('');
-    // Utilizamos el hook `useState` para manejar el estado de los campos `titulo` y `descripcion`.
+    const [imagenURL, setImagenURL] = useState('');
 
     const [deshabilitarBoton, setDeshabilitarBoton] = useState(false);
     const [errores, setErrores] = useState({});
-    // Definimos estados para controlar la habilitación del botón y manejar posibles errores.
 
     const navigate = useNavigate();
-    // Inicializamos la función `useNavigate` para navegar entre las páginas de la aplicación.
 
     const cambiarTitulo = (e) => {
         setTitulo(e.target.value);
     }
-    // Definimos una función para actualizar el estado `titulo` cuando el usuario modifica el campo correspondiente.
 
     const cambiarDescripcion = (e) => {
         setDescripcion(e.target.value);
     }
+
+    const cambiarImagenURL = (e) => {
+        setImagenURL(e.target.value);
+    };
+
     // Definimos una función para actualizar el estado `descripcion` cuando el usuario modifica el campo correspondiente.
 
     const verificarDatos = async () => {
-        // Función asincrónica para verificar y enviar los datos del formulario al servidor.
         let misErrores = {}
 
         if (titulo.length === 0) {
             misErrores.titulo = 'Debe introducir al menos un titulo.';
         }
-        // Verificamos si el campo `titulo` está vacío y, de ser así, agregamos un mensaje de error.
-
         if (descripcion.length === 0) {
             misErrores.descripcion = 'Debe introducir al menos una descripcion.';
         }
-        // Verificamos si el campo `descripcion` está vacío y, de ser así, agregamos un mensaje de error.
+        if (!imagenURL) {
+            misErrores.imagenURL = 'Debes proporcionar una URL valida de imagen.';
+        }
 
         setErrores(misErrores);
-        // Actualizamos el estado `errores` con los errores encontrados.
 
         if (Object.entries(misErrores).length === 0) {
-            // Verificamos si no hay errores en el objeto `misErrores`.
-            setDeshabilitarBoton(true);
+           setDeshabilitarBoton(true);
             // Deshabilitamos el botón para evitar envíos duplicados.
 
             await mandarDatos();
@@ -68,38 +64,33 @@ const FormularioEditar = (props) => {
         }
     }
 
-    const mandarDatos = async () => {
-        // Función asincrónica para enviar datos al servidor.
+    const mandarDatos = async () => {        
         const datos = {
             id: id,
             titulo: titulo,
             descripcion: descripcion,
-        }
-        // Creamos un objeto `datos` con la información a enviar al servidor.
-
+            imagenURL: imagenURL,
+        };
+    
         const headers = {
-            token: token
-        }
-        // Creamos un objeto `headers` con el token de autenticación.
-
+            token: token,
+        };
+    
         try {
             const respuesta = await axios.put(url, datos, { headers: headers });
-            // Enviando una solicitud PUT al servidor con los datos y encabezados proporcionados.
-
+    
             if (respuesta.status === 200) {
                 return navigate('/');
-                // Si la respuesta del servidor es exitosa, redirigimos al usuario a la página principal.
             } else {
                 setErrores({ error: 'Ocurrió un error inesperado' });
-                // Si hay un error en la respuesta del servidor, actualizamos el estado `errores`.
             }
         } catch (error) {
+            console.error('Error en la solicitud PUT:', error);
             setErrores({ error: 'Ocurrió un error inesperado' });
-            // Si ocurre un error durante la solicitud, actualizamos el estado `errores`.
         }
-
+    
         setDeshabilitarBoton(false);
-        // Habilitamos nuevamente el botón después de procesar la solicitud.
+    
     }
 
     const traerDatos = async () => {
@@ -117,7 +108,8 @@ const FormularioEditar = (props) => {
 
                 setTitulo(respuesta.titulo);
                 setDescripcion(respuesta.descripcion);
-                // Si todo está bien, actualizamos los estados `titulo` y `descripcion` con los datos de la publicación.
+                setImagenURL(respuesta.imagenURL);
+                // Si todo está bien, actualizamos los estados `titulo` `descripcion` imagenURL con los datos de la publicación.
             } else {
                 setErrores({ error: 'Ocurrió un error inesperado. No se pudo obtener la publicación' });
                 setDeshabilitarBoton(true);
@@ -136,13 +128,12 @@ const FormularioEditar = (props) => {
 
     return (
         <Form>
-            {/* Formulario de edición */}
             <Form.Group as={Row} className="mb-3" controlId="formPlaintextEmail">
                 <Form.Label column sm="2">
                     Título
                 </Form.Label>
                 <Col sm="10">
-                    <Form.Control type="text" onInput={cambiarTitulo} defaultValue={titulo} />
+                    <Form.Control type="text" onInput={cambiarTitulo} value={titulo} />
                     {
                         errores.titulo && (
                             <span style={{ color: 'red' }}>
@@ -158,7 +149,7 @@ const FormularioEditar = (props) => {
                     Descripción
                 </Form.Label>
                 <Col sm="10">
-                    <Form.Control type="text" onInput={cambiarDescripcion} defaultValue={descripcion} />
+                    <Form.Control type="text" onInput={cambiarDescripcion} value={descripcion} />
                     {
                         errores.descripcion && (
                             <span style={{ color: 'red' }}>
@@ -177,12 +168,33 @@ const FormularioEditar = (props) => {
                 )
             }
 
+            <Form.Group as={Row} className="mb-3">
+                <Form.Label column sm="2">
+                    URL de la Imagen
+                </Form.Label>
+                <Col sm="10">
+                    <Form.Control type="text" onInput={cambiarImagenURL} value={imagenURL} />
+                    {errores.imagenURL && <span style={{ color: 'red' }}>{errores.imagenURL}</span>}
+                </Col>
+            </Form.Group>
+
+            {imagenURL && (
+                <Form.Group as={Row} className="mb-3">
+                    <Col sm={{ span: 10, offset: 2 }}>
+                        <img src={imagenURL} alt="Vista previa" style={{ maxWidth: '100%', maxHeight: '200px' }} />
+                    </Col>
+                </Form.Group>
+            )}
+
+            {errores.error && (
+                <Alert variant="warning">{errores.error}</Alert>
+            )}
+
             <Button variant="primary" onClick={verificarDatos} disabled={deshabilitarBoton}>
-                Guardar edicion
+                Guardar edición
             </Button>
         </Form>
     );
 }
 
 export default FormularioEditar;
-
