@@ -1,90 +1,61 @@
-// Importamos las dependencias necesarias de React Bootstrap y React Router DOM.
-import Table from 'react-bootstrap/Table';
+import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
-import { useNavigate } from "react-router-dom";
+import Dropdown from 'react-bootstrap/Dropdown';
+import { Image } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 
-// Creamos un componente funcional llamado 'TablaDeDatos' que recibe 'props'.
-const TablaDeDatos = (props) => {
-    // Desestructuramos las propiedades 'lista' y 'usuario' de 'props'.
-    const { lista, usuario } = props;
+const PublicacionCard = ({ publicacion, usuario, onEliminar }) => {
+  const navigate = useNavigate();
 
-    // Utilizamos el hook 'useNavigate' de React Router DOM para manejar la navegación.
-    const navigate = useNavigate();
+  const ver = () => {
+    navigate('/ver/' + publicacion._id);
+  }
 
-    // Definimos la función 'ver' que navega a la página '/ver/{id}' al hacer clic en el botón 'Ver'.
-    const ver = (id) => {
-        navigate('/ver/' + id);
-    }
+  const editar = () => {
+    navigate('/editar/' + publicacion._id);
+  }
 
-    // Definimos la función 'editar' que navega a la página '/editar/{id}' al hacer clic en el botón 'Editar'.
-    const editar = (id) => {
-        navigate('/editar/' + id);
-    }
+  const handleEliminar = () => {
+    onEliminar(publicacion._id);
+  }
 
-    // Definimos la función 'eliminar' que navega a la página '/eliminar/{id}' al hacer clic en el botón 'Eliminar'.
-    const eliminar = (id) => {
-        navigate('/eliminar/' + id);
-    }
+  return (
+    <Card style={{ width: '20%', margin: '1%' }}>
+      <Card.Img variant="top" src={publicacion.imagenURL} alt="Imagen de la publicación" onClick={ver} />
+      <Card.Body>
+        <Card.Title onClick={ver}>{publicacion.titulo}</Card.Title>
+        <Card.Subtitle>{publicacion.autor ? ` ${publicacion.autor.nombres || ''}` : 'N/A'}</Card.Subtitle>
+        {publicacion.autor && publicacion.autor.imagenURL && (
+          <Image src={publicacion.autor.imagenURL} alt="Foto del autor" roundedCircle style={{ width: '50px', height: '50px', marginTop: '10px' }} />
+        )}
+        <Dropdown className="mb-2">
+          <Dropdown.Toggle variant="secondary" id="dropdown-basic">
+            Opciones
+          </Dropdown.Toggle>
+          <Dropdown.Menu>
+            <Dropdown.Item onClick={ver}>Ver</Dropdown.Item>
+            {usuario && publicacion.autor?._id && usuario.id === publicacion.autor._id && (
+              <>
+                <Dropdown.Item onClick={editar}>Editar</Dropdown.Item>
+                <Dropdown.Item onClick={handleEliminar}>Eliminar</Dropdown.Item>
+              </>
+            )}
+          </Dropdown.Menu>
+        </Dropdown>
+      </Card.Body>
+    </Card>
+  );
+};
 
-    // Devolvemos la estructura de la tabla con los datos proporcionados en 'lista'.
-    return (
-        <Table striped bordered hover className="table-dark">
-            <thead>
-                {/* Definimos las columnas de la tabla */}
-                <tr>
-                    <th>#</th>
-                    <th>Título</th>
-                    <th>Autor</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                {/* Mapeamos los elementos de 'lista' para crear filas de la tabla */}
-                {
-                  lista.map((item, key) => (
-                    <tr key={key}>
-                        {/* Mostramos el número de la fila */}
-                        <td>{ key + 1 }</td>
-                        {/* Mostramos el título del item */}
-                        <td>{ item.titulo }</td>
-                        {/* Mostramos el nombre completo del autor o 'N/A' si no hay autor */}
-                        <td>{ item.autor ? `${item.autor.apellidos || ''} ${item.autor.nombres || ''}` : 'N/A' }</td>
-                        <td>
-                                {/* Grupo de botones de acción (Ver, Editar, Eliminar) */}
-                                <ButtonGroup style={{ maxWidth: '30px' }}>
-                                    {/* Botón para ver detalles del elemento */}
-                                    <Button variant="success" onClick={() => ver(item._id)}>
-                                        Ver
-                                    </Button>
-                                    
-                                    {/* 
-                                        Mostramos los botones de Editar y Eliminar solo si hay un usuario 
-                                        y si el autor del elemento coincide con el usuario actual.
-                                    */}
-                                    {
-                                        usuario && (item.autor?._id && usuario.id === item.autor._id) && (
-                                            <>
-                                                {/* Botón para editar el elemento */}
-                                                <Button variant="primary" onClick={() => editar(item._id)}>
-                                                    Editar
-                                                </Button>
-                                                {/* Botón para eliminar el elemento */}
-                                                <Button variant="danger" onClick={() => eliminar(item._id)}>
-                                                    Eliminar
-                                                </Button>
-                                            </>
-                                        )
-                                    }
-                                </ButtonGroup>
-                            </td>
-                        </tr>
-                    ))
-                }
-            </tbody>
-        </Table>
-    );
+const TablaDeDatos = ({ lista, usuario, onEliminar }) => {
+  return (
+    <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+      {lista.map((item, key) => (
+        <PublicacionCard key={key} publicacion={item} usuario={usuario} onEliminar={onEliminar} />
+      ))}
+    </div>
+  );
 }
 
-// Exportamos el componente 'TablaDeDatos' para su uso en otras partes de la aplicación.
 export default TablaDeDatos;

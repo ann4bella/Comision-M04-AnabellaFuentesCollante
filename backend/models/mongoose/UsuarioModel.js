@@ -5,6 +5,7 @@ const UsuarioSchema = new Schema({
     contrasenia: String,
     nombres: String,
     apellidos: String,
+    imagenURL: String,
 });
 
 const UsuarioModel = model('usuario', UsuarioSchema);

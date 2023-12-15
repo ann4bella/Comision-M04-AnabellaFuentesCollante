@@ -69,11 +69,7 @@ button:focus-visible {
 
 /* CSS */
 body {
-  background-image: url(https://tuki-socks.com.ar/wp-content/uploads/2023/12/home.jpg);
-  background-size: 100% auto;
-  background-position: center top;
-  background-repeat: no-repeat;
-  height: 730px;
+ 
   font-family: 'Poppins';
 }
 .card{
@@ -95,8 +91,7 @@ h2{
 
 
 body {
-      background-image: url(https://tuki-socks.com.ar/wp-content/uploads/2023/12/home.jpg);
-      background-size: cover;
+
       background-position: top;
       height: 730px;
   }
@@ -106,3 +101,13 @@ a.nav-link{
   }
   
 }
+.fondoDeComentarios{
+  background-color: transparent;
+  border: 0px;
+}
+
+@media (min-width: 1400px) { 
+
+div.cardinicio.card{ 
+  width: '20%';
+  margin: '1%' }}

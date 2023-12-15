@@ -12,7 +12,8 @@ const FormularioRegistrarUsuario = () => {
     const [usuario, setUsuario] = useState('');
     const [contrasenia, setContrasenia] = useState('');
     const [nombres, setNombres] = useState('');
-    const [apellidos, setApellidos] = useState('');
+    const [email, setemail] = useState('');
+    const [imagenURL, setimagenURL] = useState('');
     const [deshabilitarBoton, setDeshabilitarBoton] = useState(false);
     const [errores, setErrores] = useState({});
 
@@ -30,8 +31,12 @@ const FormularioRegistrarUsuario = () => {
         setNombres(e.target.value);
     }
 
-    const cambiarApellidos = (e) => {
-        setApellidos(e.target.value);
+    const cambiaremail = (e) => {
+        setemail(e.target.value);
+    }
+
+    const cambiarimagenURL = (e) => {
+        setimagenURL(e.target.value);
     }
 
     const verificarDatos = async () => {
@@ -49,8 +54,11 @@ const FormularioRegistrarUsuario = () => {
             misErrores.nombres = 'Debe introducir al menos un nombre.';
         }
         
-        if (apellidos.length === 0) {
-            misErrores.apellidos = 'Debe introducir al menos un apellido.';
+        if (email.length === 0) {
+            misErrores.email = 'Debe introducir al menos un email.';
+        }
+        if (!imagenURL) {
+            misErrores.imagenURL = 'Debe proporcionar una URL de imagen.';
         }
 
         setErrores(misErrores);
@@ -68,8 +76,10 @@ const FormularioRegistrarUsuario = () => {
             usuario: usuario,
             contrasenia: contrasenia,
             nombres: nombres,
-            apellidos: apellidos,
+            email: email,
+            imagenURL: imagenURL,
         }
+        
     
         try {
             const respuesta = await axios.post(url, datos);
@@ -139,20 +149,44 @@ const FormularioRegistrarUsuario = () => {
 
             <Form.Group as={Row} className="mb-3">
                 <Form.Label column sm="2">
-                    Apellidos
+                    Email
                 </Form.Label>
                 <Col sm="10">
-                    <Form.Control type="text" onInput={cambiarApellidos} />
+                    <Form.Control type="text" onInput={cambiaremail} />
                     {
-                        errores.apellidos && (
+                        errores.email && (
                             <span style={{ color: 'red' }}>
-                                {errores.apellidos}
+                                {errores.email}
                             </span>
                         )
                     }
                 </Col>
             </Form.Group>
 
+            <Form.Group as={Row} className="mb-3">
+
+                <Form.Label column sm="2">
+                    URL Avatar
+                </Form.Label>
+
+                <Col sm="10">
+                <Form.Control type="text" onInput={cambiarimagenURL} />
+                    {
+                        errores.imagenURL && 
+                            <span style={{ color: 'red' }}>
+                                {errores.imagenURL}
+                            </span>}
+                </Col>
+
+            </Form.Group>
+
+            {imagenURL && (
+            <Form.Group as={Row} className="mb-3">
+                <Col sm={{ span: 10, offset: 2 }}>
+                    <img src={imagenURL} alt="Vista previa" style={{ maxWidth: '50%' }} />
+                </Col>
+            </Form.Group>
+            )}
             {
                 errores.error && (
                     <Alert variant="warning">
@@ -160,12 +194,10 @@ const FormularioRegistrarUsuario = () => {
                     </Alert>
                 )
             }
-
             <Button variant="primary" onClick={verificarDatos} disabled={deshabilitarBoton}>
                 Registrar usuario
             </Button>
         </Form>
     );
 }
-
 export default FormularioRegistrarUsuario;

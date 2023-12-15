@@ -10,7 +10,8 @@ const UsuarioModel = sequelize.define('Usuario', {
     apellidos: {
         type: DataTypes.STRING,
         allowNull: false
-    }
+    },
+    imagenURL: String,
 });
 
 module.exports = UsuarioModel;

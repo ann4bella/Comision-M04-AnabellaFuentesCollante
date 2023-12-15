@@ -1,11 +1,9 @@
 import { useState, useEffect } from 'react';
-import { Card, Button, FloatingLabel, Form } from 'react-bootstrap';
+import { Card, Button, FloatingLabel, Form, Dropdown, Image  } from 'react-bootstrap';
 import { useParams } from "react-router-dom";
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../context/AuthContext';
-import Timestamp from 'react-timestamp';
-
 import { traerDatosDePosteoPorID, traerComentariosDePosteoPorID } from './../utils/llamados.js';
 
 const Ver = () => {
@@ -102,12 +100,9 @@ const Ver = () => {
     
     return (
         
-
-
-
         <Card.Body>
            <Card>
-            <img src={imagenURL} alt="Vista previa" style={{ maxWidth: '100%', maxHeight: '200px' }}/>
+            <img src={imagenURL} alt="Vista previa" style={{ maxWidth: '100%', maxHeight: '400px' }}/>
             <Card.Body>
                 <Card.Title className="titulo-historia">{titulo}</Card.Title>
                 <Card.Text>
@@ -124,29 +119,47 @@ const Ver = () => {
             <Card>
             <Card.Body>
                 <Card.Title>Comentarios</Card.Title>
-                <Card.Body>
+                <Card.Body >
                     {comentarios.map((comentario, key) => (
                         <div key={key}>
-                            <Card>
-                                <Card.Body>
-                                    <Card.Title>{comentario.autor.nombres + ' ' + comentario.autor.apellidos}</Card.Title>
-                                    <Card.Text>ID del Comentario: {comentario._id}</Card.Text>
-                                    <Card.Text>{comentario.descripcion}</Card.Text>
-                                    {
-                                        // Mostrar el botón solo si el comentario pertenece al usuario actual
-                                        usuario && (comentario.autor?._id && usuario.id === comentario.autor._id) && (
-                                            <Button variant="danger" onClick={() => {
-                                                console.log("Comentario a eliminar:", comentario);
-                                                console.log("ID del comentario a eliminar:", comentario._id);
-                                                eliminarComentario(comentario._id);
-                                            }}>
-                                                Eliminar Comentario
-                                            </Button>
-                                        )
-                                    }
-                                </Card.Body>
-                            </Card>
-                            <br />
+                            <Card className='fondoDeComentarios'>
+                            <Card.Body style={{ display: 'flex', alignItems: 'center' }}>
+                                {/* Imagen del autor */}
+                                {comentario.autor.imagenURL && (
+                                    <Image src={comentario.autor.imagenURL} roundedCircle style={{ width: '50px', height: '50px', marginRight: '10px' }} />
+                                )}
+
+                                {/* Título del autor */}
+                                
+                                <Card>
+                                    <Card.Body style={{ display: 'flex', alignItems: 'center' }}>
+                                        {/* Contenido principal */}
+                                        <div style={{ flex: 1 }}>
+                                            <Card.Title>{comentario.autor.nombres}</Card.Title>
+                                            <Card.Text>{comentario.descripcion}</Card.Text>
+                                        </div>
+
+                                        {/* Menú desplegable con los tres puntos */}
+                                        {usuario && (comentario.autor?._id && usuario.id === comentario.autor._id) && (
+                                            <Dropdown>
+                                                <Dropdown.Toggle variant="outline-secondary" id="dropdown-basic">
+                                                 </Dropdown.Toggle>
+
+                                                <Dropdown.Menu>
+                                                    {/* Opciones dentro del menú desplegable */}
+                                                    <Dropdown.Item onClick={() => eliminarComentario(comentario._id)}>
+                                                        Eliminar Comentario
+                                                    </Dropdown.Item>
+                                                    {/* Puedes agregar más opciones aquí si es necesario */}
+                                                </Dropdown.Menu>
+                                            </Dropdown>
+                                        )}
+                                    </Card.Body>
+                                </Card>
+                                
+                            </Card.Body>
+                        </Card>
+                        
                         </div>
                     ))}
 
@@ -154,9 +167,8 @@ const Ver = () => {
 
                         <Card>
                             <Card.Body>
-                                <Card.Title>Agregar Comentario</Card.Title>
-                                <br />
-                                <FloatingLabel controlId="comentario" label="Comentario">
+                                
+                                <FloatingLabel controlId="comentario" label="Deja tu comentario">
                                     <Form.Control
                                         onInput={(e) => setMiComentario(e.target.value)}
                                         value={miComentario}

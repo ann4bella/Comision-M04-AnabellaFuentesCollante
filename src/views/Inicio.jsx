@@ -30,11 +30,12 @@ const Inicio = () => {
 
   return (
 <>
-    <h2>Contanos tus experiencias</h2>
+<div style={{ backgroundImage: "url(https://tuki-socks.com.ar/wp-content/uploads/2023/12/home.jpg)", backgroundSize: 'cover', height: '800px' }}>
+    </div>
 
-    <Card.Body className=''>
-      { usuario ? ('Hola ' + usuario.nombres + '!') : 'Para poder crear una publicación, inicia sesión!' }
-      <TablaDeDatos lista={lista} usuario={usuario} />
+    <Card.Body>
+        <h2>{ usuario ? ('Hola ' + usuario.nombres + '!') : 'Pensas crear una publicación? Registrate' }</h2>
+        <TablaDeDatos lista={lista} usuario={usuario} />
     </Card.Body>
     </>
   )
