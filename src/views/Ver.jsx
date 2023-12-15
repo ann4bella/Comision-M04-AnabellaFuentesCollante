@@ -92,17 +92,14 @@ const Ver = () => {
             }
         } catch (error) {
             console.log('Ocurrió un error inesperado al eliminar el comentario 2', error);
-        } finally {
-            // Limpiar el ID del comentario después de realizar las operaciones necesarias
-            limpiarIdComentario();
-        }
+        } 
     };
     
     return (
         
         <Card.Body>
            <Card>
-            <img src={imagenURL} alt="Vista previa" style={{ maxWidth: '100%', maxHeight: '400px' }}/>
+            <img className="centrar-imagen" src={imagenURL} alt="Vista previa" style={{ maxWidth: '100%', maxHeight: '500px', objectFit: 'cover', objectPosition: 'center' }}/>
             <Card.Body>
                 <Card.Title className="titulo-historia">{titulo}</Card.Title>
                 <Card.Text>

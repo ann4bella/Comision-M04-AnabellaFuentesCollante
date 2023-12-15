@@ -42,6 +42,7 @@ const MyNavbar = () => {
           </Nav>
         </Navbar.Collapse>
       </Container>
+      <p style={{textAlign: "right", color:'whitesmoke', padding:'20px'}}>{ usuario ? ('Hola ' + usuario.nombres + '!') : 'Pensas crear una publicación? Registrate' }</p>
     </Navbar>
   );
 };

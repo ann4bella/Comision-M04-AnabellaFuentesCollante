@@ -1,11 +1,9 @@
+import React from 'react';
 import Card from 'react-bootstrap/Card';
-import Button from 'react-bootstrap/Button';
-import ButtonGroup from 'react-bootstrap/ButtonGroup';
-import Dropdown from 'react-bootstrap/Dropdown';
-import { Image } from 'react-bootstrap';
+import { Image, Button, ButtonGroup } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 
-const PublicacionCard = ({ publicacion, usuario, onEliminar }) => {
+const PublicacionCard = ({ publicacion, usuario, }) => {
   const navigate = useNavigate();
 
   const ver = () => {
@@ -16,39 +14,49 @@ const PublicacionCard = ({ publicacion, usuario, onEliminar }) => {
     navigate('/editar/' + publicacion._id);
   }
 
-  const handleEliminar = () => {
-    onEliminar(publicacion._id);
+  const eliminar = () => {
+    navigate('/eliminar/' + publicacion._id);
   }
 
   return (
-    <Card style={{ width: '20%', margin: '1%' }}>
-      <Card.Img variant="top" src={publicacion.imagenURL} alt="Imagen de la publicación" onClick={ver} />
+    <Card className="mb-40" style={{ width: '22%', height: '450px', marginRight:'30px', marginBottom:'30px'}}>
+      <Card.Img className="mb-40" variant="top" src={publicacion.imagenURL} alt="Imagen de la publicación" onClick={ver} style={{ height: '200px', objectFit: 'cover' }} />
+      <Card.Body style={{ display: 'flex', alignItems: 'center'}}>
+    {publicacion.autor && publicacion.autor.imagenURL && (
+      <Image src={publicacion.autor.imagenURL} alt="Foto del autor" roundedCircle style={{ width: '50px', height: '50px', marginRight: '10px' }} />
+    )}
+    <div>
+      <Card.Subtitle>{publicacion.autor ? ` ${publicacion.autor.nombres || ''}` : 'N/A'}</Card.Subtitle>
+    </div>
+  </Card.Body>
+      
       <Card.Body>
+        
         <Card.Title onClick={ver}>{publicacion.titulo}</Card.Title>
-        <Card.Subtitle>{publicacion.autor ? ` ${publicacion.autor.nombres || ''}` : 'N/A'}</Card.Subtitle>
-        {publicacion.autor && publicacion.autor.imagenURL && (
-          <Image src={publicacion.autor.imagenURL} alt="Foto del autor" roundedCircle style={{ width: '50px', height: '50px', marginTop: '10px' }} />
+
+        {/* Grupo de botones con borde gris */}
+      <ButtonGroup>
+        <Button variant="outline-secondary" onClick={ver}>
+          Ver
+        </Button>
+        {usuario && publicacion.autor?._id && usuario.id === publicacion.autor._id && (
+          <>
+            <Button variant="outline-secondary" onClick={editar}>
+              Editar
+            </Button>
+            <Button variant="outline-secondary" onClick={eliminar}>
+              Eliminar
+            </Button>
+          </>
         )}
-        <Dropdown className="mb-2">
-          <Dropdown.Toggle variant="secondary" id="dropdown-basic">
-            Opciones
-          </Dropdown.Toggle>
-          <Dropdown.Menu>
-            <Dropdown.Item onClick={ver}>Ver</Dropdown.Item>
-            {usuario && publicacion.autor?._id && usuario.id === publicacion.autor._id && (
-              <>
-                <Dropdown.Item onClick={editar}>Editar</Dropdown.Item>
-                <Dropdown.Item onClick={handleEliminar}>Eliminar</Dropdown.Item>
-              </>
-            )}
-          </Dropdown.Menu>
-        </Dropdown>
+      </ButtonGroup>
+       
       </Card.Body>
     </Card>
   );
 };
 
-const TablaDeDatos = ({ lista, usuario, onEliminar }) => {
+const NuevaTablaDeDatos = ({ lista, usuario, onEliminar }) => {
   return (
     <div style={{ display: 'flex', flexWrap: 'wrap' }}>
       {lista.map((item, key) => (
@@ -58,4 +66,4 @@ const TablaDeDatos = ({ lista, usuario, onEliminar }) => {
   );
 }
 
-export default TablaDeDatos;
+export default NuevaTablaDeDatos;
