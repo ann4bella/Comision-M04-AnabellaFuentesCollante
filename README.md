@@ -1,8 +1,7 @@
 # React + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+PROYECTO INTEGRADOR - EPICA - COMISION 04 - TRAMO III
 
-Currently, two official plugins are available:
+![Front](https://tuki-socks.com.ar/wp-content/uploads/2023/12/screencapture-localhost-5173-2023-12-15-18_48_49.png)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+[![Video del funcionamiento](https://youtu.be/57JweZYBOJQ)
